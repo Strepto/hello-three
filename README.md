@@ -4,8 +4,6 @@ This is a quick tutorial to get started with the combination of npm, THREEjs and
 
 The goal is to setup a simple workflow for a quick feedback loop for 3D web projects. We will try to setup a game loop, and add some logic to it.
 
-It uses a basic "Starter HTML and CSS" setup, which can be improved.
-
 The goals are:
 
 * Easy to get started
@@ -24,8 +22,9 @@ You need to have installed the latest version of:
 
 * `nodejs`
 * `npm`
+* `Visual Studio Code`
 
-I had versions `node:18.x` and `npm:9.x`, but this is kinda basic.
+I had versions `node:18.x` and `npm:9.x`, but version should not matter as long as its up to date.
 
 ### Step 1: What is node?
 
@@ -55,17 +54,13 @@ npm create vite@latest
 
 First supply a name: For instance three-playground
 
-then pick `"vanilla"`
+then pick `vanilla`
 
-and pick `"typescript"`
+and pick `typescript`
 
-this should tell you to cd into the folder and run two commands to get started. Lets keep to just cd into the folder.
+this should tell you to `cd` into the folder and run two commands to get started. Lets keep to just `cd` into the folder.
 
 ### Step 3: Install our dependencies
-
-We have two kinds of dependencies:
-
-#### First: The runtime dependencies
 
 We need threejs!
 
@@ -279,3 +274,65 @@ const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
 ```
 
 You should now have a lit box! Cool! Try moving the light around to see if the box changes lighting
+
+
+### Step X(R): intermission
+
+You can also run threejs in WebXR for HoloLens and VR! Try adding setup for it:
+
+```ts
+// this requires a special import in the top of the file
+import { ARButton } from "three/examples/jsm/webxr/ARButton";
+
+// snip
+
+// In the setup
+renderer.xr.enabled = true;
+canvas.parentElement!.appendChild(ARButton.createButton(renderer));
+```
+
+If you are on the same network as a HoloLens or Quest you should be able to run
+
+`npm run dev -- --host`
+
+and connect to your ip seen in "Network:"!
+
+### Next steps:
+
+The manual at the threejs website is a super good starting point:
+
+> <https://threejs.org/manual/#en/fundamentals>
+
+Then go to the threejs website and look at the examples.
+
+> <https://threejs.org/examples/>
+
+All examples have source code attached. Look for the `(<>)` icon in the lower right corner.
+
+If you want to do AR/VR you could start with this example, showing how to add controllers and handling events: <https://github.com/mrdoob/three.js/blob/master/examples/webxr_ar_dragging.html>
+
+Etc!
+
+Consider improving the html: The canvas can be bigger, and the default text can be removed. Try this setup:
+
+## Publishing
+
+If you want to publish the code, you can build it by running
+
+```sh
+npm run build
+```
+
+The output in the `/dist` folder can then be copied to a webserver/host. There are hundreds of tools for this, and most can run from github on every checkin.
+
+Example tool I often use nowadays as its free is Azure Static Webapps which takes 2 minutes to setup if you have done it previously.
+
+```text
+// Azure Static Webapp Setup config
+Select Custom from the Build Presets dropdown.
+Type ./ in the App location box.
+Leave the Api location box empty.
+Type ./dist App artifact location box.
+```
+
+Ok! Now get to creating 3D Stuffs!
