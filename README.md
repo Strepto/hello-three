@@ -300,13 +300,37 @@ import { ARButton } from "three/examples/jsm/webxr/ARButton";
 // In the setup
 renderer.xr.enabled = true;
 canvas.parentElement!.appendChild(ARButton.createButton(renderer));
+
+// At the end:
+// replace
+update()
+// with
+renderer.setAnimationLoop(update);
 ```
 
-If you are on the same network as a HoloLens or Quest you should be able to run
+You also have to host on a secure location.
+
+```bash
+npm install --save-dev vite-plugin-mkcert
+```
+
+and create a new file `/vite.config.js`
+
+```js
+import { defineConfig } from "vite";
+import mkcert from "vite-plugin-mkcert";
+
+export default defineConfig({
+    server: { https: true },
+    plugins: [mkcert()],
+});
+```
+
+If you are on the same network as a HoloLens or Quest you should now be able to run
 
 `npm run dev -- --host`
 
-and connect to your ip seen in "Network:"!
+and connect to your ip seen in "Network:"! Remember `https`!
 
 ### Next steps:
 

@@ -1,5 +1,6 @@
 // Import statements import from a "module name" or another file. Its kinda magic, but you get used to it.
 import * as THREE from "three";
+import { ARButton } from "three/examples/jsm/webxr/ARButton";
 
 // Export is kinda like public, function is a function. This function takes in a canvas of type HTMLCanvasElement (this is typescript!)
 export function startThree(canvas: HTMLCanvasElement) {
@@ -9,7 +10,7 @@ export function startThree(canvas: HTMLCanvasElement) {
     });
 
     // Set the background color to black (try changing this to blue or any other html color!)
-    renderer.setClearColor("black");
+    renderer.setClearColor("blue");
 
     // Everything in THREE (as in other 3D apps) have a "Scene". This is where every 3D object gets it coordinates relative to.
     const scene = new THREE.Scene();
@@ -25,6 +26,9 @@ export function startThree(canvas: HTMLCanvasElement) {
     directionalLight.position.z = 3;
 
     scene.add(directionalLight);
+
+    renderer.xr.enabled = true;
+    document.body.appendChild(ARButton.createButton(renderer));
 
     // Create a box! We need some 3D Stuff to look at!
     const geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -44,8 +48,6 @@ export function startThree(canvas: HTMLCanvasElement) {
     // Note: this is an internal function so we have access to the scene and renderer. Could be structured differently (for instance with a class)
     function update(timeMs: number) {
         const totalTimeSeconds = timeMs * 0.001;
-        // This waits X ms (one frame) before triggering itself again
-        requestAnimationFrame(update);
 
         const didResizeRenderer = resizeRendererToDisplaySize(renderer);
         if (didResizeRenderer) {
@@ -71,8 +73,7 @@ export function startThree(canvas: HTMLCanvasElement) {
         renderer.render(scene, camera);
     }
 
-    // Start the animation loop!
-    requestAnimationFrame(update);
+    renderer.setAnimationLoop(update);
 }
 
 function resizeRendererToDisplaySize(renderer: THREE.WebGLRenderer) {
