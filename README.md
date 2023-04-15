@@ -159,10 +159,11 @@ export function startThree(canvas: HTMLCanvasElement) {
     // The camera in threejs looks down hte -Z axis. So we move it "backwards" by increasing the Z value. (This way we can see our cube!)
     camera.position.z = 5;
 
+
     // The animate function is like the unity "Update loop"
     // Note: this is an internal function so we have access to the scene and renderer. Could be structured differently (for instance with a class)
-    function update(deltaTimeMs: number) {
-        const deltaTimeSeconds = deltaTimeMs * 0.001;
+    function update(timestampMs: number) {
+        const timeSeconds = timestampMs * 0.001;
         // Finally we draw the scene!
         renderer.render(scene, camera);
     }
@@ -240,7 +241,7 @@ This is one solution to a moving cube, quick and dirty.
 ```ts
 let cubeIsMovingRight = true;
 
-function update(deltaTimeMs: number) {
+function update(timestampMs: number) {
     cube.rotateX(0.01);
     cube.rotateY(0.02);
 
