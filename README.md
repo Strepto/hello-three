@@ -87,4 +87,195 @@ You will now have a package-lock.json, this can be used when installing to get t
 
 run `npm run dev` to start the developer server.
 
-Try changing any of the files, such as the `\index.html` or any of the typescript files to see how it compiles and changes the website immediately.
+Try changing any of the files, such as the `src\main.ts` see how it compiles and changes the website immediately.
+
+```text
+Example: change
+<h1>Vite + TypeScript</h1>
+
+to:
+<h1>Vite + TypeScript + Three</h1>
+```
+
+Cool 😎
+
+### Step 5: We're webdev now!
+
+Ok, so we have a running something.
+
+What we need now is to add some three's
+
+To do this we need to:
+
+A: Add a "Canvas"
+B: Initialize ThreeJS
+
+In the main.ts file add:
+
+```html
+    <canvas width="500" height="500" id="three-canvas"></canvas>
+
+here:
+
+    <p class="read-the-docs">
+      Click on the Vite and TypeScript logos to learn more
+    </p>
+    <canvas width="500" height="500" id="three-canvas"></canvas>
+  </div>
+```
+
+Now create a new file in the src folder:
+
+```src/threeapp.ts```
+
+Add this to the file:
+
+```ts
+// Import statements import from a "module name" or another file. Its kinda magic, but you get used to it.
+import * as THREE from "three";
+
+// Export is kinda like public, function is a function. This function takes in a canvas of type HTMLCanvasElement (this is typescript!)
+export function startThree(canvas: HTMLCanvasElement) {
+    // Create a WebGL renderer and connect it to the canvas
+    const renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+    });
+
+    // Set the background color to black (try changing this to blue or any other html color!)
+    renderer.setClearColor("black");
+
+    // Everything in THREE (as in other 3D apps) have a "Scene". This is where every 3D object gets it coordinates relative to.
+    const scene = new THREE.Scene();
+    // Create a basic "Camera" to render from
+    const camera = new THREE.PerspectiveCamera(
+        75,
+        canvas.width / canvas.height
+    );
+
+    // Create a box! We need some 3D Stuff to look at!
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    // Create a material, and color it.
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    // Combining a geometry and a material to a "Mesh" (A better name would maybe be a "Model?" but not my code)
+    const cube = new THREE.Mesh(geometry, material);
+    // Adds the cube to the scene! Remark: The cube has the default position of 0,0,0. We'll change this later.
+    scene.add(cube);
+
+    // The camera in threejs looks down hte -Z axis. So we move it "backwards" by increasing the Z value. (This way we can see our cube!)
+    camera.position.z = 5;
+
+    // The animate function is like the unity "Update loop"
+    // Note: this is an internal function so we have access to the scene and renderer. Could be structured differently (for instance with a class)
+    function update() {
+        // This waits X ms (one frame) before triggering itself again
+        requestAnimationFrame(update);
+
+        // Finally we draw the scene!
+        renderer.render(scene, camera);
+    }
+
+    // Start the animation loop!
+    update();
+}
+```
+
+You should now be able to save, and check the website for a nice green box on a black background!
+
+🌌
+
+### Step 6: Moving your cube
+
+We have an animation loop but nothing is happening.
+
+We can rotate the cube to make it spin!
+
+Try adding this to the update:
+
+```ts
+//// This waits X ms (one frame) before triggering itself again
+//requestAnimationFrame(update);
+
+cube.rotateX(0.01);
+cube.rotateY(0.02);
+
+//// Finally we draw the scene!
+//renderer.render(scene, camera);
+```
+
+Save and see the cube rotate in your browser!
+
+### Step 7: Exercise
+
+Try making the cube "ping-pong" from left to right and back.
+
+```ts
+// Tips
+
+// Get the current cube position with
+cube.position.x
+
+// You can change the position with
+
+cube.position.x += 0.01
+
+// You can save a "State" such as "is moving left or right"
+// by adding a
+let isMovingRight = true
+// Outside of the update function.
+// example:
+let isMovingRight = true;
+function update(){
+    // Snip
+```
+
+### Step 7: Possible solution
+
+This is one solution to a moving cube, quick and dirty.
+
+```ts
+let cubeIsMovingRight = true;
+
+function update() {
+    requestAnimationFrame(update);
+
+    cube.rotateX(0.01);
+    cube.rotateY(0.02);
+
+    if (cube.position.x > 1) {
+        cubeIsMovingRight = false;
+    }
+
+    if (cube.position.x < -1) {
+        cubeIsMovingRight = true;
+    }
+
+    // This uses a ternary operator (the ?): works like a compact if/else
+    cube.position.x += cubeIsMovingRight ? 0.01 : -0.01;
+
+    renderer.render(scene, camera);
+}
+```
+
+### Step 8: Lights, and Action!
+
+The cube we have is a bit flat now. Lets try to add a light to the scene, and a better material.
+
+To add a light insert this in the init code. (Not in the update loop)
+
+```ts
+// This is a directional light (like the sun)
+const directionalLight = new THREE.DirectionalLight("white", 2);
+directionalLight.position.y = 10;
+directionalLight.position.x = 1;
+directionalLight.position.z = 3;
+
+scene.add(directionalLight);
+```
+
+Also edit the cubes material from `MeshBasic` to `MeshStandard`:
+
+```ts
+const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+```
+
+You should now have a lit box! Cool! Try moving the light around to see if the box changes lighting
