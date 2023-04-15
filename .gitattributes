@@ -1,0 +1,11 @@
+# Normalize line endings for the current OS
+# * text=auto == Checkout OS-style, commit Unix-style
+* text=auto
+
+# Keep these files in lf end of line on any OS
+*.sh text eol=lf
+
+# Because of a bug in the env.sh script not handling Windows line endings
+/echo-3d-web/.env* text eol=lf
+
+# Other
