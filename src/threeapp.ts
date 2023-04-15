@@ -44,10 +44,12 @@ export function startThree(canvas: HTMLCanvasElement) {
 
     let cubeIsMovingRight = true;
 
+    let prevUpdateTimestampMs: number = 0;
     // The animate function is like the unity "Update loop"
     // Note: this is an internal function so we have access to the scene and renderer. Could be structured differently (for instance with a class)
-    function update(timeMs: number) {
-        const totalTimeSeconds = timeMs * 0.001;
+    function update(timestampMs: number) {
+        const deltaTimeSeconds = (timestampMs - prevUpdateTimestampMs) * 0.001; // <= calculate the time since the last frame. This can make animations play at same speed independent of framerate
+        prevUpdateTimestampMs = timestampMs;
 
         const didResizeRenderer = resizeRendererToDisplaySize(renderer);
         if (didResizeRenderer) {
