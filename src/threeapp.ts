@@ -58,8 +58,9 @@ export function startThree(canvas: HTMLCanvasElement) {
             camera.updateProjectionMatrix();
         }
 
-        cube.rotateX(0.01);
-        cube.rotateY(0.02);
+        // This means rotate x radians per second
+        cube.rotateX(THREE.MathUtils.DEG2RAD * 90 * deltaTimeSeconds);
+        cube.rotateY(Math.PI * deltaTimeSeconds);
 
         if (cube.position.x > 1) {
             cubeIsMovingRight = false;
@@ -69,7 +70,8 @@ export function startThree(canvas: HTMLCanvasElement) {
             cubeIsMovingRight = true;
         }
 
-        cube.position.x += cubeIsMovingRight ? 0.04 : -0.01;
+        // Move x units per second in direction
+        cube.position.x += (cubeIsMovingRight ? 3 : -1) * deltaTimeSeconds;
 
         // Finally we draw the scene!
         renderer.render(scene, camera);
