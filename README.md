@@ -275,7 +275,6 @@ const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
 
 You should now have a lit box! Cool! Try moving the light around to see if the box changes lighting
 
-
 ### Step X(R): intermission
 
 You can also run threejs in WebXR for HoloLens and VR! Try adding setup for it:
