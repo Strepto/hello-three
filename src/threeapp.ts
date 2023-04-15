@@ -42,9 +42,17 @@ export function startThree(canvas: HTMLCanvasElement) {
 
     // The animate function is like the unity "Update loop"
     // Note: this is an internal function so we have access to the scene and renderer. Could be structured differently (for instance with a class)
-    function update() {
+    function update(timeMs: number) {
+        const totalTimeSeconds = timeMs * 0.001;
         // This waits X ms (one frame) before triggering itself again
         requestAnimationFrame(update);
+
+        const didResizeRenderer = resizeRendererToDisplaySize(renderer);
+        if (didResizeRenderer) {
+            const canvas = renderer.domElement;
+            camera.aspect = canvas.clientWidth / canvas.clientHeight;
+            camera.updateProjectionMatrix();
+        }
 
         cube.rotateX(0.01);
         cube.rotateY(0.02);
@@ -64,5 +72,16 @@ export function startThree(canvas: HTMLCanvasElement) {
     }
 
     // Start the animation loop!
-    update();
+    requestAnimationFrame(update);
+}
+
+function resizeRendererToDisplaySize(renderer: THREE.WebGLRenderer) {
+    const canvas = renderer.domElement;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    const needResize = canvas.width !== width || canvas.height !== height;
+    if (needResize) {
+        renderer.setSize(width, height, false);
+    }
+    return needResize;
 }
