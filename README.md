@@ -161,16 +161,14 @@ export function startThree(canvas: HTMLCanvasElement) {
 
     // The animate function is like the unity "Update loop"
     // Note: this is an internal function so we have access to the scene and renderer. Could be structured differently (for instance with a class)
-    function update() {
-        // This waits X ms (one frame) before triggering itself again
-        requestAnimationFrame(update);
-
+    function update(deltaTimeMs: number) {
+        const deltaTimeSeconds = deltaTimeMs * 0.001;
         // Finally we draw the scene!
         renderer.render(scene, camera);
     }
 
-    // Start the animation loop!
-    update();
+    // Start the update loop
+    renderer.setAnimationLoop(update);
 }
 ```
 
@@ -199,9 +197,6 @@ We can rotate the cube to make it spin!
 Try adding this to the update:
 
 ```ts
-//// This waits X ms (one frame) before triggering itself again
-//requestAnimationFrame(update);
-
 cube.rotateX(0.01);
 cube.rotateY(0.02);
 
@@ -209,7 +204,7 @@ cube.rotateY(0.02);
 //renderer.render(scene, camera);
 ```
 
-Save and see the cube rotate in your browser!
+Save and see the cube rotate in your browser! Try tweaking the rotation, maybe add rotateZ?!
 
 ### Step 7: Exercise
 
@@ -233,6 +228,9 @@ let isMovingRight = true
 let isMovingRight = true;
 function update(){
     // Snip
+    if(pos > 1)
+        isMovingRight = false;
+    // Snip
 ```
 
 ### Step 7: Possible solution
@@ -242,9 +240,7 @@ This is one solution to a moving cube, quick and dirty.
 ```ts
 let cubeIsMovingRight = true;
 
-function update() {
-    requestAnimationFrame(update);
-
+function update(deltaTimeMs: number) {
     cube.rotateX(0.01);
     cube.rotateY(0.02);
 
@@ -287,7 +283,7 @@ const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
 
 You should now have a lit box! Cool! Try moving the light around to see if the box changes lighting
 
-### Step X(R): intermission
+### Optional Step: XR intermission
 
 You can also run threejs in WebXR for HoloLens and VR! Try adding setup for it:
 
@@ -297,24 +293,20 @@ import { ARButton } from "three/examples/jsm/webxr/ARButton";
 
 // snip
 
-// In the setup
+// In the setup below
+// const renderer = snip
 renderer.xr.enabled = true;
 canvas.parentElement!.appendChild(ARButton.createButton(renderer));
-
-// At the end:
-// replace
-update()
-// with
-renderer.setAnimationLoop(update);
 ```
 
-You also have to host on a secure location.
+You also have to host with https to open WebXR sites. Lets create a local certificate.
 
 ```bash
+# First install a mkcert plugin for vite
 npm install --save-dev vite-plugin-mkcert
 ```
 
-and create a new file `/vite.config.js`
+then create a new file in the project root: `/vite.config.js`
 
 ```js
 import { defineConfig } from "vite";
@@ -330,7 +322,7 @@ If you are on the same network as a HoloLens or Quest you should now be able to 
 
 `npm run dev -- --host`
 
-and connect to your ip seen in "Network:"! Remember `https`!
+and connect to your ip seen in "`Network:`"!
 
 ### Next steps:
 
