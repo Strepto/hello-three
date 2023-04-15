@@ -174,13 +174,25 @@ export function startThree(canvas: HTMLCanvasElement) {
 }
 ```
 
+```ts
+// In main.ts
+// Add this import:
+import { startThree } from "./threeapp";
+
+// And on the final line of the file add:
+const canvas = document.querySelector<HTMLCanvasElement>("#three-canvas")!
+startThree(canvas);
+```
+
 You should now be able to save, and check the website for a nice green box on a black background!
 
 🌌
 
+Try changing some colors to see how fast its updated
+
 ### Step 6: Moving your cube
 
-We have an animation loop but nothing is happening.
+We have an update loop but nothing is happening.
 
 We can rotate the cube to make it spin!
 
@@ -302,6 +314,8 @@ The manual at the threejs website is a super good starting point:
 
 > <https://threejs.org/manual/#en/fundamentals>
 
+I recommend checking out the "debugging" section if you are new to javascript/typescript.
+
 Then go to the threejs website and look at the examples.
 
 > <https://threejs.org/examples/>
@@ -335,3 +349,11 @@ Type ./dist App artifact location box.
 ```
 
 Ok! Now get to creating 3D Stuffs!
+
+## Feedback
+
+If anything in this guide does not work, please do not hesitate to create an issue in this repository.
+
+Most of the code in the repo follows something like the final setup if you follow the guide, so that can be used as a reference.
+
+// Nils Henrik
